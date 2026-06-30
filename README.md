@@ -75,7 +75,7 @@ git clone https://github.com/WilliamTechQa/myapp-cache-clear.git
 2. Ative **Modo do desenvolvedor** (canto superior direito)
 3. Clique em **Carregar sem compactação**
 4. Selecione a pasta do projeto (`myapp-cache-clear`)
-5. A extensão **Cache Cleaner** aparecerá na barra de ferramentas
+5. A extensão **Cache Manager** aparecerá na barra de ferramentas
 
 ### 3. Fixar na barra (opcional)
 
