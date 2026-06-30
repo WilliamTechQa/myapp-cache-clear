@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cache Manager — Extensão Arker</title>
+  <meta name="description" content="Extensão para limpeza de cache em ambientes Arker. Uso interno.">
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #1f1f1f;
+      background: #f8f9fa;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: #1a73e8; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 40px 24px 32px;
+    }
+
+    /* Hero */
+    .hero {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      background: #fff;
+      border: 1px solid #e8e8e8;
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin-bottom: 32px;
+    }
+
+    .hero-logo {
+      width: 64px;
+      height: 64px;
+      border-radius: 12px;
+      object-fit: contain;
+      flex-shrink: 0;
+      border: 1px solid #eee;
+      margin-top: 2px;
+    }
+
+    .hero-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .hero-text {
+      margin-bottom: 16px;
+    }
+
+    .hero-text h1 {
+      font-size: clamp(18px, 4.5vw, 24px);
+      font-weight: 600;
+      margin: 0 0 4px;
+      line-height: 1.3;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-text p {
+      color: #555;
+      font-size: 15px;
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: background 0.15s;
+    }
+
+    .btn-icon-inline {
+      display: inline-flex;
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .btn-icon-inline svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .btn-primary {
+      background: #1a73e8;
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: #1557b0;
+      text-decoration: none;
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: #1a73e8;
+      border: 1px solid #dadce0;
+    }
+
+    .btn-secondary:hover {
+      background: #f8f9fa;
+      text-decoration: none;
+    }
+
+    /* Sections */
+    section {
+      background: #fff;
+      border: 1px solid #e8e8e8;
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin-bottom: 24px;
+    }
+
+    section h2 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #1f1f1f;
+    }
+
+    section p {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    section code {
+      background: #f1f3f4;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    /* Steps */
+    .steps {
+      list-style: none;
+      counter-reset: step;
+    }
+
+    .steps li {
+      counter-increment: step;
+      display: flex;
+      gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 14px;
+      color: #444;
+    }
+
+    .steps li:last-child { border-bottom: none; }
+
+    .steps li::before {
+      content: counter(step);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 28px;
+      height: 28px;
+      background: #1a73e8;
+      color: #fff;
+      border-radius: 50%;
+      font-size: 13px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .steps code {
+      background: #f1f3f4;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    /* Guide table */
+    .guide {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .guide th,
+    .guide td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .guide th {
+      font-weight: 600;
+      color: #333;
+      background: #fafafa;
+    }
+
+    .guide td:last-child { color: #555; }
+
+    .btn-cell {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      color: #1a73e8;
+    }
+
+    .btn-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .table-wrap {
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .table-wrap--scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .steps span {
+      min-width: 0;
+      word-wrap: break-word;
+    }
+
+    .steps code {
+      word-break: break-word;
+    }
+
+    @media (min-width: 601px) {
+      .hero-text h1 {
+        white-space: nowrap;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px 16px 40px;
+      }
+
+      .hero {
+        flex-direction: column;
+        padding: 20px 16px;
+        gap: 16px;
+        margin-bottom: 20px;
+      }
+
+      .hero-logo {
+        width: 56px;
+        height: 56px;
+        margin-top: 0;
+      }
+
+      .hero-text {
+        margin-bottom: 14px;
+      }
+
+      .hero-text h1 {
+        white-space: normal;
+      }
+
+      .hero-text p {
+        font-size: 14px;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+      }
+
+      .hero-actions .btn {
+        display: block;
+        width: 100%;
+        text-align: center;
+      }
+
+      section {
+        padding: 20px 16px;
+        margin-bottom: 16px;
+      }
+
+      section h2 {
+        font-size: 16px;
+        margin-bottom: 12px;
+      }
+
+      section p {
+        font-size: 13px;
+      }
+
+      .table-wrap {
+        overflow-x: visible;
+      }
+
+      .guide {
+        width: 100%;
+        min-width: 0;
+        font-size: 13px;
+      }
+
+      .guide thead {
+        display: none;
+      }
+
+      .guide tbody tr {
+        display: block;
+        padding: 14px 0;
+        border-bottom: 1px solid #f0f0f0;
+      }
+
+      .guide tbody tr:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+
+      .guide tbody tr:first-child {
+        padding-top: 0;
+      }
+
+      .guide td {
+        display: block;
+        padding: 0 0 10px;
+        border-bottom: none;
+        word-wrap: break-word;
+      }
+
+      .guide td:last-child {
+        padding-bottom: 0;
+      }
+
+      .guide td::before {
+        content: attr(data-label);
+        display: block;
+        font-weight: 600;
+        font-size: 11px;
+        color: #888;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+      }
+
+      .guide td:first-child::before {
+        display: none;
+      }
+
+      .guide td:first-child {
+        font-size: 15px;
+        padding-bottom: 6px;
+      }
+
+      .guide td:first-child .btn-cell {
+        display: flex;
+      }
+
+      .steps li {
+        font-size: 13px;
+        gap: 12px;
+        padding: 10px 0;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <header class="hero">
+      <img
+        src="logo.png"
+        alt="Cache Manager"
+        class="hero-logo"
+      >
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1>Cache Manager</h1>
+          <p>Extensão de uso interno para limpeza de cache em ambientes <strong>Arker</strong>.</p>
+        </div>
+        <div class="hero-actions">
+          <a
+            href="https://github.com/WilliamTechQa/myapp-cache-clear/archive/refs/heads/main.zip"
+            class="btn btn-primary"
+          >
+            Baixar extensão
+            <span class="btn-icon-inline" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 3v12"/>
+                <path d="M7 10l5 5 5-5"/>
+                <path d="M5 21h14"/>
+              </svg>
+            </span>
+          </a>
+          <a
+            href="https://github.com/WilliamTechQa/myapp-cache-clear"
+            class="btn btn-secondary"
+            target="_blank"
+            rel="noopener noreferrer"
+          >Ver no GitHub</a>
+        </div>
+      </div>
+    </header>
+
+    <section>
+      <h2>Visão Geral</h2>
+      <div class="table-wrap">
+      <table class="guide">
+        <thead>
+          <tr>
+            <th>Botão</th>
+            <th>Descrição</th>
+            <th>Funcionalidades</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <span class="btn-cell">
+                <span class="btn-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                    <rect x="2" y="3" width="20" height="6" rx="1.5"/>
+                    <rect x="2" y="15" width="20" height="6" rx="1.5"/>
+                    <circle cx="6" cy="6" r="1" fill="currentColor" stroke="none"/>
+                    <circle cx="6" cy="18" r="1" fill="currentColor" stroke="none"/>
+                  </svg>
+                </span>
+                <strong>Servidor</strong>
+              </span>
+            </td>
+            <td data-label="Descrição">Cache da aplicação</td>
+            <td data-label="Funcionalidades">Limpa o cache da aplicação no servidor via <code>/admin/application.aspx</code> e redireciona para a URL original.</td>
+          </tr>
+          <tr>
+            <td>
+              <span class="btn-cell">
+                <span class="btn-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                    <path d="M21 12a9 9 0 1 1-2.64-6.36"/>
+                    <path d="M21 3v6h-6"/>
+                  </svg>
+                </span>
+                <strong>Reload</strong>
+              </span>
+            </td>
+            <td data-label="Descrição">Cache do navegador</td>
+            <td data-label="Funcionalidades">Limpa o cache do servidor e do navegador, retorna para a URL original e executa um hard reload (com bypass de cache).</td>
+          </tr>
+          <tr>
+            <td>
+              <span class="btn-cell">
+                <span class="btn-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                  </svg>
+                </span>
+                <strong>Bypass</strong>
+              </span>
+            </td>
+            <td data-label="Descrição">Atualizar versão</td>
+            <td data-label="Funcionalidades">Força a atualização da versão limpando o cache do servidor e recarregando a página com o parâmetro <code>?nocache=timestamp</code>.</td>
+          </tr>
+          <tr>
+            <td>
+              <span class="btn-cell">
+                <span class="btn-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                  </svg>
+                </span>
+                <strong>Limpeza Completa</strong>
+              </span>
+            </td>
+            <td data-label="Descrição">Aplicação, navegador e bypass</td>
+            <td data-label="Funcionalidades">Executa a limpeza em sequência: cache do servidor, bypass de versão e reload do navegador.</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>Guia de Instalação</h2>
+      <ol class="steps">
+        <li>
+          <span>Baixe o projeto pelo botão acima ou clone:
+            <code>git clone https://github.com/WilliamTechQa/myapp-cache-clear.git</code>
+          </span>
+        </li>
+        <li>
+          <span>Extraía o ZIP (se baixou) e abra <code>chrome://extensions</code> no Chrome ou Edge.</span>
+        </li>
+        <li>
+          <span>Ative o <strong>Modo do desenvolvedor</strong> (canto superior direito).</span>
+        </li>
+        <li>
+          <span>Clique em <strong>Carregar sem compactação</strong> e selecione a pasta do projeto.</span>
+        </li>
+        <li>
+          <span>Fixe o ícone do <strong>Cache Manager</strong> na barra do navegador para acesso rápido.</span>
+        </li>
+      </ol>
+    </section>
+
+  </div>
+
+</body>
+</html>

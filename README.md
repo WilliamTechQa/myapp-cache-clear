@@ -14,10 +14,10 @@ Durante desenvolvimento, homologação ou suporte, é comum a aplicação exibir
 
 | Botão | Descrição | O que faz |
 |---|---|---|
-| **Servidor** | Cache da aplicação | Limpa cache no servidor via `/admin/application.aspx` e volta para a URL original |
-| **Reload** | Cache do navegador | Limpa no servidor, volta para a URL original e faz hard reload (`bypassCache`) |
-| **Bypass** | Atualizar versão | Limpa no servidor e volta com `?nocache=timestamp` na URL original |
-| **Limpeza completa** | Aplicação, navegador e bypass | Executa servidor + bypass + reload em sequência |
+| **Servidor** | Cache da aplicação | Limpa o cache da aplicação no servidor via `/admin/application.aspx` e redireciona para a URL original. |
+| **Reload** | Cache do navegador | Limpa o cache do servidor e do navegador, retorna para a URL original e executa um hard reload (com bypass de cache). |
+| **Bypass** | Atualizar versão | Força a atualização da versão limpando o cache do servidor e recarregando a página com o parâmetro `?nocache=timestamp`. |
+| **Limpeza Completa** | Aplicação, navegador e bypass | Executa a limpeza em sequência: cache do servidor, bypass de versão e reload do navegador. |
 
 ### Fluxo comum (todos os botões)
 
@@ -49,6 +49,16 @@ A extensão foi desenvolvida para **Google Chrome** e funciona sem alterações 
 
 ---
 
+## Página de documentação
+
+Após ativar o GitHub Pages, a documentação fica disponível em:
+
+**https://williamtechqa.github.io/myapp-cache-clear/**
+
+Para ativar: no repositório, vá em **Settings → Pages → Source: Deploy from branch → main → /docs**.
+
+---
+
 ## Instalação
 
 ### 1. Baixar o projeto
@@ -56,7 +66,7 @@ A extensão foi desenvolvida para **Google Chrome** e funciona sem alterações 
 Clone o repositório ou baixe o ZIP:
 
 ```bash
-git clone https://github.com/SEU-USUARIO/myapp-cache-clear.git
+git clone https://github.com/WilliamTechQa/myapp-cache-clear.git
 ```
 
 ### 2. Carregar no Chrome
@@ -84,7 +94,7 @@ Clique no ícone de quebra-cabeça na barra do Chrome e fixe o **Cache Manager**
 | Deploy feito e a tela ainda mostra versão antiga da aplicação | **Servidor** |
 | Arquivos estáticos (CSS/JS) parecem em cache local | **Reload** |
 | Quer forçar uma nova requisição sem alterar a lógica da página | **Bypass** |
-| Não tem certeza ou quer garantir tudo | **Limpeza completa** |
+| Não tem certeza ou quer garantir tudo | **Limpeza Completa** |
 
 > **Dica:** O popup pode fechar durante a execução. As ações continuam na aba em segundo plano.
 
@@ -126,7 +136,7 @@ Verifique se a aba ativa está em um domínio Arker válido. O popup fecha após
 
 ### Ainda vejo conteúdo antigo depois da limpeza
 
-Tente **Limpeza completa**. Se persistir, pode ser cache de CDN, sessão do usuário ou outro fator fora do escopo desta extensão.
+Tente **Limpeza Completa**. Se persistir, pode ser cache de CDN, sessão do usuário ou outro fator fora do escopo desta extensão.
 
 ### Preciso estar logado no admin?
 

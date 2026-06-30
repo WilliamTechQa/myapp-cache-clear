@@ -126,7 +126,7 @@ async function limpezaCompleta() {
   const tab = await getActiveTab();
   const originalUrl = tab.url;
 
-  setStatus("🧨 Executando limpeza completa...");
+  setStatus("🧨 Executando Limpeza Completa...");
 
   await limparNoAdmin(tab);
 
@@ -136,7 +136,7 @@ async function limpezaCompleta() {
   setStatus("🔄 Recarregando sem cache...");
   chrome.tabs.reload(tab.id, { bypassCache: true });
 
-  setStatus("✅ Limpeza completa finalizada");
+  setStatus("✅ Limpeza Completa finalizada");
 }
 
 /**
