@@ -53,7 +53,7 @@ A extensão foi desenvolvida para **Google Chrome** e funciona sem alterações 
 
 Após ativar o GitHub Pages, a documentação fica disponível em:
 
-**https://williamtechqa.github.io/myapp-cache-clear/**
+**https://williamtechqa.github.io/myapp-cache-manager/**
 
 Para ativar: no repositório, vá em **Settings → Pages → Source: Deploy from branch → main → /docs**.
 
@@ -66,7 +66,7 @@ Para ativar: no repositório, vá em **Settings → Pages → Source: Deploy fro
 Clone o repositório ou baixe o ZIP:
 
 ```bash
-git clone https://github.com/WilliamTechQa/myapp-cache-clear.git
+git clone https://github.com/WilliamTechQa/myapp-cache-manager.git
 ```
 
 ### 2. Carregar no Chrome
@@ -74,7 +74,7 @@ git clone https://github.com/WilliamTechQa/myapp-cache-clear.git
 1. Abra `chrome://extensions`
 2. Ative **Modo do desenvolvedor** (canto superior direito)
 3. Clique em **Carregar sem compactação**
-4. Selecione a pasta do projeto (`myapp-cache-clear`)
+4. Selecione a pasta do projeto (`myapp-cache-manager`)
 5. A extensão **Cache Manager** aparecerá na barra de ferramentas
 
 ### 3. Fixar na barra (opcional)
@@ -103,7 +103,7 @@ Clique no ícone de quebra-cabeça na barra do Chrome e fixe o **Cache Manager**
 ## Estrutura do projeto
 
 ```
-myapp-cache-clear/
+myapp-cache-manager/
 ├── manifest.json    # Configuração da extensão (Manifest V3)
 ├── popup.html       # Interface do menu
 ├── popup.js         # Lógica de limpeza de cache
